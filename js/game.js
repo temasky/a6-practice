@@ -25,54 +25,66 @@ function round() {
 
 
   if (hits === maxHits) {
-  $(".game-field").removeClass("target");
-  $(".game-field").removeClass("miss");
-  $(".game-field").text("");
+
   endGame();
   }
 }
 
 function endGame() {
-  // FIXME: спрятать игровое поле сначала
-
+  // при вызове функции конца игры всё поле отчищается
+  $(".game-field").removeClass("target");
+  $(".game-field").removeClass("miss");
+  $(".game-field").text("");
+  $('.game-field').hide();
   let totalPlayedMillis = getTimestamp() - firstHitTime;
   let totalPlayedSeconds = Number(totalPlayedMillis / 1000).toPrecision(3);
   $("#total-time-played").text(totalPlayedSeconds);
+  // общее количество некоректных попаданий будет отражено
+  // внутри span miss-clicks
   $("#miss-clicks").text(missClicks);
   $("#win-message").removeClass("d-none");
-  $('.game-field').hide();
+// В конце игры прячется кнопка пуск 
+// и показывается кнопка начать заново
   $('#button-start').hide();
-  $('#button-reload').show();
+  $('#button-reload').removeClass("d-none");
 }
 
 function handleClick(event) {
 
-  // FIXME: убирать текст со старых таргетов. Кажется есть .text?
+ 
   if ($(event.target).hasClass("target")) {
     hits = hits + 1;
 
     round();
   }
   else {
+    // Работа с неправильным попаданием. в случае ошибки - удаляется
+    // предыдущее неправильное поле и подсвечивается новое
+    $(".game-field").removeClass("miss");
     $(event.target).addClass("miss");
     missClicks++;
   }
 
-// TODO: как-то отмечать если мы промахнулись? См CSS класс .miss
     
   }
-  
-function start() {
+// функция запуска игры по кнопке. Необходима для 
+// обнуления неправильно нажатых полей перед началом
+// игры
+function startGame() {
   missClicks=0;
   round();
 }
 
 function init() {
-  $('#button-reload').hide();
-  // TODO: заказчик просил отдельную кнопку, запускающую игру а не просто по загрузке
-  $("#button-start").click(start);
+  // Игра начинается только после кнопки запуск,
+  // но время начинает считаться после первого выбраного
+  // значения
+  $("#button-start").removeClass("d-none");
+ 
+  $("#button-start").click(startGame);
 
   $(".game-field").click(handleClick);
+
   $("#button-reload").click(function() {
     location.reload();
   });
