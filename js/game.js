@@ -6,7 +6,7 @@ let firstHitTime;
 let missClicks;
 
 function round() {
-  // FIXME: надо бы убрать "target" прежде чем искать новый
+ 
 
   $(".game-field").removeClass("target");
   $(".game-field").removeClass("miss");
@@ -16,12 +16,10 @@ function round() {
 
   $(divSelector).addClass("target");
   $(divSelector).text(hits);
-  // TODO: помечать target текущим номером
+
   if (hits === 2) {
     firstHitTime = getTimestamp();
   }
-  // FIXME: тут надо определять при первом клике firstHitTime;
-
 
 
   if (hits === maxHits) {
